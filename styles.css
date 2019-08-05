@@ -1,0 +1,21 @@
+a:link {
+    background-color: rgb(192, 206, 212);
+    color:black;
+    padding: 15px 25px;
+}
+
+#disabled {
+    color:white;
+    background-color: gray;
+    padding: 15px 25px;
+}
+
+#tooltip {
+    position:absolute;
+    text-align:start;
+    background:whitesmoke;
+}
+
+circle {
+    stroke:black;
+}
