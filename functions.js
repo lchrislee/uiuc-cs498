@@ -93,7 +93,6 @@ function processData(incoming, pageEntry) {
     svg.append("text")
         .attr("transform", "translate(" + (maxDimension + minMargin) / 2 + ", " + (maxDimension + 1.6 * minMargin) + ")")
         .text("City");
-
 }
 
 function getToolTipDiv() {
