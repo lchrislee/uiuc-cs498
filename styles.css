@@ -1,10 +1,15 @@
-a:link {
+.internalLink {
     background-color: rgb(192, 206, 212);
     color:black;
     padding: 15px 25px;
 }
 
-#disabled {
+.externalLink {
+    color:black;
+    padding: 0px;
+}
+
+.disabled {
     color:white;
     background-color: gray;
     padding: 15px 25px;

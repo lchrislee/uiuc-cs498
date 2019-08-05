@@ -30,6 +30,7 @@ function processData(incoming, pageEntry) {
 
     var svg = d3.select("svg");
 
+    // Chart
     svg.append("g")
         .attr("transform", "translate(" + minMargin + ", " + minMargin + ")")
         .selectAll("circle")
@@ -54,6 +55,7 @@ function processData(incoming, pageEntry) {
                     return "red";
                 }
             })
+            // Tooltip
             .on("mouseover", function(d, i) {
                 getToolTipDiv()
                     .style("opacity", 1)
@@ -67,6 +69,11 @@ function processData(incoming, pageEntry) {
                     .html("");
             });
 
+    // Title
+    svg.append("text")
+        .attr("transform", "translate(" + (maxDimension - minMargin) / 2 + ", " + minMargin + ")")
+        .text("2017 Model - Average MPG");
+
     // Y Axis
     svg.append("g")
         .attr("id", "highwayAxis")
@@ -74,8 +81,8 @@ function processData(incoming, pageEntry) {
         .call(highwayAxis);
 
     svg.append("text")
-        .attr("transform", "translate(" + (minMargin / 2) + ", " + (maxDimension - minMargin) + ") rotate(-90)")
-        .text("Average Highway MPG");
+        .attr("transform", "translate(" + (minMargin / 2) + ", " + (maxDimension / 2 + minMargin) + ") rotate(-90)")
+        .text("Highway");
 
     // X Axis
     svg.append("g")
@@ -84,8 +91,8 @@ function processData(incoming, pageEntry) {
         .call(cityAxis);
 
     svg.append("text")
-        .attr("transform", "translate(" + ((maxDimension - minMargin) / 2) + ", " + (maxDimension + 1.6 * minMargin) + ")")
-        .text("Average City MPG");
+        .attr("transform", "translate(" + (maxDimension + minMargin) / 2 + ", " + (maxDimension + 1.6 * minMargin) + ")")
+        .text("City");
 
 }
 
@@ -93,7 +100,7 @@ function getToolTipDiv() {
     return d3.selectAll("div").filter("#tooltip");
 }
 
-function getToolTipText(datum) {
+function getToolTipText(datum, shouldshowCylinders) {
     var cylinderText = datum.EngineCylinders == "0" ? "N/A" : datum.EngineCylinders;
     return "Maker: " + datum.Make + "<br/># Cylinders: " + cylinderText + "<br/>Highway Mileage: " + datum.AverageHighwayMPG + "<br/>City Mileage: " + datum.AverageCityMPG;
 }
