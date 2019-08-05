@@ -1,15 +1,36 @@
-function processData(incoming, pageCount) {
+function getGraphDimensions(pageEntry) {
+    var tickValues = [];
+    if (pageEntry == 0) {
+        tickValues = [10, 15, 20, 30, 45];
+    } else if (pageEntry == 1) {
+        tickValues = [80, 95, 125, 150];
+    } else {
+        tickValues = [10, 20, 50, 100];
+    }
+
+    return {
+        "minCity": pageEntry == 1 ? 80 : 10,
+        "maxCity": pageEntry == 0 ? 45 : 150,
+        "minHighway": pageEntry == 1 ? 70 : 10,
+        "maxHighway": pageEntry == 0 ? 50 : 150,
+        "tickValues": tickValues
+    };
+}
+
+function processData(incoming, pageEntry) {
 
     let maxDimension = 400;
-    let minMargin = 50;
+    let minMargin = 60;
+    let dims = getGraphDimensions(pageEntry);
 
-    var cityScale = d3.scaleLog([10, 150], [0, maxDimension]);
-    var cityAxis = d3.axisBottom(cityScale).tickValues([10, 20, 50, 100]).tickFormat(d3.format("~s"));
-    var highwayScale = d3.scaleLog([10, 150], [maxDimension, 0]);
-    var highwayAxis = d3.axisLeft(highwayScale).tickValues([10, 20, 50, 100]).tickFormat(d3.format("~s"));
+    var cityScale = d3.scaleLog([dims.minCity, dims.maxCity], [0, maxDimension]);
+    var cityAxis = d3.axisBottom(cityScale).tickValues(dims.tickValues).tickFormat(d3.format("~s"));
+    var highwayScale = d3.scaleLog([dims.minHighway, dims.maxHighway], [maxDimension, 0]);
+    var highwayAxis = d3.axisLeft(highwayScale).tickValues(dims.tickValues).tickFormat(d3.format("~s"));
 
-    d3.select("svg")
-        .append("g")
+    var svg = d3.select("svg");
+
+    svg.append("g")
         .attr("transform", "translate(" + minMargin + ", " + minMargin + ")")
         .selectAll("circle")
         .data(incoming)
@@ -22,7 +43,7 @@ function processData(incoming, pageCount) {
                 return highwayScale(Number(d.AverageHighwayMPG));
             })
             .attr("r", function(d, i) {
-                return 5;// + Number(d.EngineCylinders);
+                return 5;
             })
             .attr("fill", function(d) {
                 if (d.Fuel == "Electricity") {
@@ -46,15 +67,25 @@ function processData(incoming, pageCount) {
                     .html("");
             });
 
-    d3.select("svg")
-        .append("g")
+    // Y Axis
+    svg.append("g")
+        .attr("id", "highwayAxis")
         .attr("transform", "translate(" + minMargin + ", " + minMargin + ")")
         .call(highwayAxis);
 
-    d3.select("svg")
-        .append("g")
+    svg.append("text")
+        .attr("transform", "translate(" + (minMargin / 2) + ", " + (maxDimension - minMargin) + ") rotate(-90)")
+        .text("Average Highway MPG");
+
+    // X Axis
+    svg.append("g")
+        .attr("id", "cityAxis")
         .attr("transform", "translate(" + minMargin + ", " + (maxDimension + minMargin) + ")")
         .call(cityAxis);
+
+    svg.append("text")
+        .attr("transform", "translate(" + ((maxDimension - minMargin) / 2) + ", " + (maxDimension + 1.6 * minMargin) + ")")
+        .text("Average City MPG");
 
 }
 
